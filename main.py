@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QMainWindow, QApplication,QFileDialog,QMessageBox
 import sys
 from NotePad import Ui_MainWindow
 from PyQt6.QtPrintSupport import QPrinter,QPrintDialog
+from PyQt6.QtCore import QFileInfo
 class NotePadWindow(QMainWindow,Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -11,7 +12,7 @@ class NotePadWindow(QMainWindow,Ui_MainWindow):
         self.actionNew.triggered.connect(self.fileNew)
         self.actionOpen.triggered.connect(self.openFile)
         self.actionPrint.triggered.connect(self.printFile)
-
+        self.actionExport_PDF.triggered.connect(self.exportFdf)
         self.actionExit.triggered.connect(self.exitApp)
         self.actionCopy.triggered.connect(self.textEdit.copy)
         self.actionCut.triggered.connect(self.textEdit.cut)
@@ -30,6 +31,14 @@ class NotePadWindow(QMainWindow,Ui_MainWindow):
             return False
         return True
 
+    def exportFdf(self):
+        fn, _ = QFileDialog.getSaveFileName(self, 'Export PDF')
+        if fn != "":
+            if QFileInfo(fn).suffix() == "" : fn += '.pdf'
+            printer = QPrinter(QPrinter.PrinterMode.HighResolution)
+            printer.setOutputFormat(QPrinter.OutputFormat.PdfFormat)
+            printer.setOutputFileName(fn)
+            self.textEdit.document().print(printer)
     def saveFile(self):
         filename = QFileDialog.getSaveFileName(self,"save File")
         if filename[0]:
