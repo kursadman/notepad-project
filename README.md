@@ -1,2 +1,2 @@
 # notepad-project
-simple notepad with python usin PyQt
+simple notepad with python using PyQt
